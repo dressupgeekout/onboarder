@@ -48,27 +48,32 @@ class Onboarder
 
     if name_fields.any? { |n| n =~ EMPTY }
       session[:flash] = [false, "Sorry, please enter a nonblank name."]
-      return redirect to("/")
+      status(403)
+      return erb(:index)
     end
 
     if !config(:default_redmine_proj) or config(:default_redmine_proj).empty?
       session[:flash] = [false, "Sorry, please define the Redmine project."]
-      return redirect to("/")
+      status(403)
+      return erb(:index)
     end
 
     if !config(:hiring_manager) or config(:hiring_manager).empty?
       session[:flash] = [false, "Sorry, please establish the hiring manager."]
-      return redirect to("/")
+      status(403)
+      return erb(:index)
     end
 
     if !task_map or task_map.empty?
       session[:flash] = [false, "Sorry, please define at least one task."]
-      return redirect to("/")
+      status(403)
+      return erb(:index)
     end
 
     if !all_roles or all_roles.empty?
       session[:flash] = [false, "Sorry, please define at least one role."]
-      return redirect to("/")
+      status(403)
+      return erb(:index)
     end
 
     newhire_fullname = sprintf("%s %s", params["newhire-name-first"],
