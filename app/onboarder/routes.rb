@@ -132,7 +132,7 @@ class Onboarder
       }))
     end
 
-    set_flash_success(true,
+    set_flash_success(
       "Task #{params["task-name"].inspect} successfully added.")
     redirect to("/")
   end
