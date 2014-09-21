@@ -1,0 +1,78 @@
+body {
+  margin: 0em;
+  padding: 0em;
+  font-family: "Helvetica", sans-serif;
+  background-color: #fff;
+  color: #000;
+}
+
+#header-div {
+  width: 100%;
+  margin: 0em;
+  background-color: #000;
+  color: #fff;
+}
+
+header {
+  width: 50em;
+  margin: auto;
+  padding: 1em 3em 1em 3em;
+}
+
+header hgroup h1,
+header hgroup h2 {
+  margin: 0em;
+  padding: 0em;
+}
+
+#content {
+  width: 50em;
+  margin: auto;
+  padding: 1em 3em 3em 3em;
+}
+
+footer {
+  padding: 0em 3em 0em 3em;
+  font-size: small;
+}
+
+.info {
+  font-style: italic;
+  color: #444;
+}
+
+.small {
+  font-size: small;
+}
+
+.highlightable-table tr td {
+  padding: 0em 1em 0em 0em;
+}
+
+.highlightable-table tr:hover {
+  background-color: #ddd;
+}
+
+a {
+  color: #00b;
+}
+
+a:hover {
+  color: #00f;
+}
+
+.flash {
+  display: block;
+  padding: 1em;
+  margin: 1em;
+}
+
+.flash-success {
+  background-color: #ccc;
+  color: #000;
+}
+
+.flash-fail {
+  background-color: #900;
+  color: #fff;
+}

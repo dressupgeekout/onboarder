@@ -1,0 +1,59 @@
+<a name="roles"></a><h2>Roles</h2>
+
+<ul class="info">
+  <li>The "roles" mechanism allows you to assign multiple, related tasks to the
+  same individual.</li>
+  <li>Note this is a separate concept from Redmine's own notion of a role.</li>
+</ul>
+
+<% if all_roles and !all_roles.empty? %>
+  <table class="highlightable-table">
+    <tr>
+      <th>Role</th>
+      <th>Current Person</th>
+      <th></th>
+    </tr>
+
+    <% all_roles.each do |role| %>
+      <tr>
+        <td><%= role.name %></td>
+        <td><%= user_login_to_pretty(role.user) %></td>
+        <td>
+          <form method="POST" action="/roles">
+            <input type="hidden" name="_method" value="DELETE"/>
+            <input type="hidden" name="role-name" value="<%= role.name %>"/>
+            <input type="submit" value="Delete"/>
+          </form>
+        </td>
+      </tr>
+    <% end %>
+  </table>
+<% else %>
+  <p class="info">(No roles have been assigned yet!)</p>
+<% end %>
+
+<!-- ///// -->
+
+<h2>Add a new role</h2>
+
+<p class="info"><strong>Note:</strong> This does <strong>not</strong> actually
+create a role or any tickets inside Redmine.</p>
+
+<form method="POST" action="/roles">
+  <table>
+    <tr>
+      <td>Name of role</td>
+      <td><input type="text" name="role-name"/></td>
+    </tr>
+
+    <tr>
+      <td>Who fills this role?</td>
+      <td><%= select_any_redmine_user("user") %></td>
+    </tr>
+
+    <tr>
+      <td><input type="submit" value="Submit"/></td>
+      <td></td>
+    </tr>
+  </table>
+</form>

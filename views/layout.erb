@@ -1,0 +1,43 @@
+<!doctype html>
+
+<html lang="en">
+<head>
+  <meta charset="utf-8"/> 
+  <title>New Hire Onboarding Tool</title>
+  <link rel="stylesheet" type="text/css" href="/css/fonts.css"/>
+  <link rel="stylesheet" type="text/css" href="/css/style.css"/>
+  <script type="text/javascript" src="/js/onboarder.js"></script>
+</head>
+<body>
+
+<div id="header-div">
+  <header>
+    <hgroup>
+      <img alt="" src="/img/logo.png"/>
+      <h1>New Hire Onboarding Tool</h1>
+    </hgroup>
+  </header>
+</div>
+
+
+<div id="content">
+  <% if session[:flash] %>
+    <%= flash(session[:flash][1], session[:flash][0]) %>
+    <% session[:flash] = nil %>
+  <% end %>
+  <%= yield %>
+</div>
+
+<footer>
+  <hr/>
+  <p>
+    Using Redmine installed at
+    <strong><a target="_blank" href="<%= redmine_server_uri %>"><%= redmine_server_uri %></a></strong>
+  </p>
+  <p>This is Onboarder v<%= Onboarder::VERSION %></p>
+</footer>
+
+<script type="text/javascript">main();</script>
+
+</body>
+</html>

@@ -1,0 +1,13 @@
+@font-face {
+  font-family: "Dinot Regular";
+  src: url("/font/DINOT-CondRegular.ttf");
+}
+
+@font-face {
+  font-family: "Dinot Bold";
+  src: url("/font/DINOT-CondBold.ttf");
+}
+
+h1, h2, h3, h4, h5 {
+  font-family: "Dinot Regular", sans-serif;
+}
