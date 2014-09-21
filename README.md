@@ -15,21 +15,6 @@ enough (and open-source enough) to be used at your workplace, too! A simple
 configuration file takes care of all the gory details.
 
 
-## The Configuration File
-
-Onboarder expects a configuration file -- which must consist of one valid
-JSON object -- inside a file "config.json".
-
-  - `"redmine_api_key"`: Your Redmine API key. You can find this inside the
-    "My account" page inside your Redmine installation.
-
-  - `"redmine_uri"`: The URI to your installation of Redmine.
-
-  - `"redmine_default_project"`: The name of the Redmine project under which
-    these onboarding tickets will be created.
-
-The `"task_map"` subobject is a mapping from Redmine ID to a list of tasks.
-
 ## System Requirements
 
 Onboarder is written in Ruby against the Sinatra framework, so you need a
