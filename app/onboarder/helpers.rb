@@ -107,6 +107,17 @@ class Onboarder
       return ERB.new(templ, nil, "<>").result(binding)
     end
 
+    # This actually sets the session variable.
+    def set_flash_success(msg)
+      session[:flash] = [true, msg]
+    end
+
+    # This actually sets the session variable.
+    def set_flash_failure(msg)
+      session[:flash] = [false, msg]
+    end
+
+    # This method returns the HTML for displaying a flash message.
     def flash(msg, success=true)
       if success
         return sprintf(%q(<span class="flash flash-success">%s</span>), msg)

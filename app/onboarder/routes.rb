@@ -7,7 +7,7 @@ class Onboarder
 
   post("/roles") do
     if params["role-name"] =~ EMPTY
-      session[:flash] = [false, "Sorry, please enter a nonblank name."]
+      set_flash_failure("Sorry, please enter a nonblank name.")
       return redirect to("/")
     end
 
@@ -18,19 +18,18 @@ class Onboarder
       }))
     end
 
-    session[:flash] = [true, sprintf("Successfully assigned %s as the %s.",
-      user_login_to_pretty(params["user"]), params["role-name"])]
+    set_flash_success(sprintf("Successfully assigned %s as the %s.",
+      user_login_to_pretty(params["user"]), params["role-name"]))
+
     redirect to("/")
   end
 
   delete("/roles") do
     if task_map.any? { |t| t.role == params["role-name"] }
       status(403)
-      session[:flash] = [
-        false,
+      set_flash_failure(
         "Please remove all of the tasks assigned to the " +
-        "#{params["role-name"].inspect} role, first."
-      ]
+        "#{params["role-name"].inspect} role, first.")
       redirect to("/")
     end
 
@@ -38,8 +37,9 @@ class Onboarder
       @@db[:roles].delete_if { |r| r.name == params["role-name"] }
     end
 
-    session[:flash] = [true,
-      "Successfully removed the #{params["role-name"].inspect} role."]
+    set_flash_success(  
+      "Successfully removed the #{params["role-name"].inspect} role.")
+
     redirect to("/")
   end
 
@@ -47,31 +47,31 @@ class Onboarder
     name_fields = [params["newhire-name-first"], params["newhire-name-last"]]
 
     if name_fields.any? { |n| n =~ EMPTY }
-      session[:flash] = [false, "Sorry, please enter a nonblank name."]
+      set_flash_failure("Sorry, please enter a nonblank name.")
       status(403)
       return erb(:index)
     end
 
     if !config(:default_redmine_proj) or config(:default_redmine_proj).empty?
-      session[:flash] = [false, "Sorry, please define the Redmine project."]
+      set_flash_failure("Sorry, please define the Redmine project.")
       status(403)
       return erb(:index)
     end
 
     if !config(:hiring_manager) or config(:hiring_manager).empty?
-      session[:flash] = [false, "Sorry, please establish the hiring manager."]
+      set_flash_failure("Sorry, please establish the hiring manager.")
       status(403)
       return erb(:index)
     end
 
     if !task_map or task_map.empty?
-      session[:flash] = [false, "Sorry, please define at least one task."]
+      set_flash_failure("Sorry, please define at least one task.")
       status(403)
       return erb(:index)
     end
 
     if !all_roles or all_roles.empty?
-      session[:flash] = [false, "Sorry, please define at least one role."]
+      set_flash_failure("Sorry, please define at least one role.")
       status(403)
       return erb(:index)
     end
@@ -104,8 +104,7 @@ class Onboarder
       all_issue_ids << issue_id
     end
 
-    session[:flash] = [true,
-      sprintf("Created issues %s", all_issue_ids.inspect)]
+    set_flash_success(sprintf("Created issues %s", all_issue_ids.inspect))
     redirect to("/")
   end
 
@@ -115,13 +114,13 @@ class Onboarder
       conf[:default_redmine_proj] = params["default-redmine-proj"]
       conf[:hiring_manager] = params["hiring-manager"]
     end
-    session[:flash] = [true, "Successfully updated."]
+    set_flash_success("Successfully updated.")
     redirect to("/")
   end
 
   post("/tasks") do
     if params["task-name"] =~ EMPTY or params["role-name"] =~ EMPTY
-      session[:flash] = [false, "Sorry, please define a role first."]
+      set_flash_failure("Sorry, please define a role first.")
       redirect to("/")     
     end
 
@@ -133,10 +132,8 @@ class Onboarder
       }))
     end
 
-    session[:flash] = [
-      true,
-      "Task #{params["task-name"].inspect} successfully added."
-    ]
+    set_flash_success(true,
+      "Task #{params["task-name"].inspect} successfully added.")
     redirect to("/")
   end
 
@@ -144,8 +141,9 @@ class Onboarder
     @@db.transaction do
       @@db[:tasks].delete_if { |t| t.subject == params["task-name"] }
     end
-    session[:flash] = [true,
-      "Successfully removed task #{params["task-name"].inspect}."]
+
+    set_flash_success(
+      "Successfully removed task #{params["task-name"].inspect}.")
     redirect to("/")
   end
 end
