@@ -11,8 +11,7 @@ the appropriate people for the appropriate tasks. It's the tool your HR
 department never knew it really needed.
 
 The Onboarder tool is primarily developed at Norse Corp, but it's generic
-enough (and open-source enough) to be used at your workplace, too! A simple
-configuration file takes care of all the gory details.
+enough (and open-source enough) to be used at your workplace, too!
 
 
 ## System Requirements
