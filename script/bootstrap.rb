@@ -1,10 +1,12 @@
 #!/usr/bin/env ruby
 # Onboarder database bootstrap script
 require 'pstore'
+require 'fileutils'
 
 DBDIR = File.join(File.dirname(__FILE__), "..", "db")
 VALID_ENVS = %w[development testing production]
 
+FileUtils.mkdir_p(DBDIR) if not File.directory?(DBDIR)
 env = ARGV.shift
 
 if VALID_ENVS.none? { |e| e == env }
