@@ -1,10 +1,10 @@
 .PHONY:	dependencies server dbdump bootstrap testrest irb
 
 # Set to "production" when you're ready
-RACK_ENV= development
+RACK_ENV?= development
 
 BUNDLER= bundle exec
-RACKUP= rackup
+RACKUP?= rackup
 
 dependencies:
 	mkdir -p vendor
