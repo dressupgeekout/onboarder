@@ -16,6 +16,10 @@ class Role
       return 0
     end
   end
+
+  def to_h
+    return {"name" => @name, "user" => @user,}
+  end
 end
 
 # A Task is assigned to the user who fulfills a certain Role.
@@ -34,5 +38,13 @@ class Task
     else
       return 0
     end
+  end
+
+  def to_h
+    return {
+      "subject" => @subject,
+      "role" => @role,
+      "long_descr" => @long_descr,
+    }
   end
 end
