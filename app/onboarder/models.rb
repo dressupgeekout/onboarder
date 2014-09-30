@@ -48,3 +48,27 @@ class Task
     }
   end
 end
+
+# A TaskMap represents the list of tasks that are necessary for a certain
+# class of employee. For example, engineers have different onboarding
+# requirements from sales people.
+class TaskMap
+  include Virtus.model
+  include Comparable
+  attribute :name, String
+  attribute :mapping, Array[Task]
+
+  def <=>(other)
+    if self.name < other.name
+      return -1
+    elsif self.name > other.name
+      return 1
+    else
+      return 0
+    end
+  end
+
+  def to_h
+    return {"name" => @name,}
+  end
+end
