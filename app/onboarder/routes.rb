@@ -53,7 +53,10 @@ class Onboarder
     end
 
     if !config(:default_redmine_proj) or config(:default_redmine_proj).empty?
-      set_flash_failure("Sorry, please define the Redmine project.")
+      set_flash_failure(%q(
+        Sorry, please define the Redmine project.
+        <a href="#configuration">Click here.</a>
+      ))
       status(403)
       return erb(:index)
     end
