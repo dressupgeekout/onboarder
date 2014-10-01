@@ -6,9 +6,7 @@ require 'pstore'
 $LOAD_PATH.unshift File.join(File.dirname(__FILE__), "..", "app")
 require 'onboarder/models'
 
-pretty = false
-pretty = true if ARGV.include?("--pretty")
-
+pretty = ARGV.include?("--pretty")
 db = PStore.new("db/onboarder-development.pstore")
 
 confobj = {
@@ -21,6 +19,7 @@ db.transaction do
   fields.each { |field| confobj[field] = db[:config][field.to_sym] }
   db[:roles].each { |role| confobj["roles"].push(role.to_h) }
   db[:tasks].each { |task| confobj["tasks"].push(task.to_h) }
+  db[:taskmaps].each { |taskmap| confobj["taskmaps"].push(taskmap.to_h) }
 end
 
 output_method = (pretty ? :pretty_generate : :dump)
