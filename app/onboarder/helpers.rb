@@ -42,6 +42,10 @@ class Onboarder
       return @@redmine_cxn.all_projects
     end
 
+    def all_taskmaps()
+      return @@db.transaction { @@db[:taskmaps] }.sort
+    end
+
     def task_map()
       return @@db.transaction { @@db[:tasks] }.sort
     end
@@ -101,6 +105,17 @@ class Onboarder
               <%= role.name %> &mdash;
               <%= user_login_to_pretty(role.user) %>
             </option>
+          <% end %>
+        </select>
+      EOF
+      return ERB.new(templ, nil, "<>").result(binding)
+    end
+
+    def select_any_taskmap(id)
+      templ = <<-EOF
+        <select name="" id="">
+          <% all_taskmaps.each do |taskmap| %>
+            <option value="<%= taskmap.name %>"><%= taskmap.name %></option>
           <% end %>
         </select>
       EOF

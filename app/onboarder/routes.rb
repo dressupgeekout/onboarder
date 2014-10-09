@@ -52,6 +52,12 @@ class Onboarder
       return erb(:index)
     end
 
+    #if params["newhire-klass"] =~ EMPTY
+    #  set_flash_failure("Sorry, please specify an employee class.")
+    #  status(403)
+    #  return erb(:index)
+    #end
+
     if !config(:default_redmine_proj) or config(:default_redmine_proj).empty?
       set_flash_failure("Sorry, please define the Redmine project.")
       status(403)
@@ -145,5 +151,15 @@ class Onboarder
     set_flash_success(
       "Successfully removed task #{params["task-name"].inspect}.")
     redirect to("/")
+  end
+
+  post("/taskmaps") do
+    status(501)
+    return
+  end
+
+  delete("/taskmaps") do
+    status(501)
+    return
   end
 end
