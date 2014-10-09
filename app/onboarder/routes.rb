@@ -153,6 +153,10 @@ class Onboarder
     redirect to("/")
   end
 
+  get("/taskmaps/?") do
+    erb(:task_maps_list)
+  end
+
   post("/taskmaps") do
     status(501)
     return

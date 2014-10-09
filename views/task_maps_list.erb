@@ -1,0 +1,24 @@
+<h2>Task Maps</h2>
+
+<ul class="info">
+  <li><p>A <em>task map</em> is used to define the list of tasks that are
+  required for each new employee of a particular class.</p></li>
+
+  <li><p>For example, onboarding an engineer involves a setup process that is
+  different from onboarding a salesperson. In that case, you should have at
+  least two task maps.</p></li>
+</ul> 
+
+<table>
+  <tr>
+    <th>Name</th>
+    <th></th>
+  </tr>
+
+  <% all_taskmaps.each do |taskmap| %>
+    <tr>
+      <td><%= taskmap.name %></td>
+      <td>(<%= taskmap.mapping.inspect %>)</td>
+    </tr>
+  <% end %>
+</table>
