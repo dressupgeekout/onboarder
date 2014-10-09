@@ -127,7 +127,7 @@ class Onboarder
   post("/tasks") do
     if params["task-name"] =~ EMPTY or params["role-name"] =~ EMPTY
       set_flash_failure("Sorry, please define a role first.")
-      redirect to("/")     
+      redirect to("/taskmaps")
     end
 
     @@db.transaction do
@@ -150,7 +150,7 @@ class Onboarder
 
     set_flash_success(
       "Successfully removed task #{params["task-name"].inspect}.")
-    redirect to("/")
+    redirect to("/taskmaps")
   end
 
   get("/taskmaps/?") do
