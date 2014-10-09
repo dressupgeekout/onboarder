@@ -25,6 +25,26 @@ header hgroup h2 {
   padding: 0em;
 }
 
+header nav ul {
+  margin: 0em;
+  padding: 0em;
+}
+
+header nav ul li {
+  list-style: none;
+  padding: 0em 1em 0em 0em;
+  display: inline;
+}
+
+header nav ul li a {
+  color: #bbb;
+  font-weight: bold;
+}
+
+header nav ul li a:hover {
+  color: #fff;
+}
+
 #content {
   width: 50em;
   margin: auto;
