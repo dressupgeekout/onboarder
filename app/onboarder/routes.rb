@@ -161,8 +161,18 @@ class Onboarder
   end
 
   post("/taskmaps") do
-    status(501)
-    return
+    if params["taskmap-name"] =~ EMPTY
+      set_flash_failure("Sorry, please enter a nonblank name.")
+      status(403)
+      return erb(:task_maps_list)
+    end
+
+    @@db.transaction do
+      tm = TaskMap.new({:name => params["taskmap-name"]})
+      @@db[:taskmaps].push(tm)
+    end
+
+    redirect to("/taskmaps")
   end
 
   delete("/taskmaps") do

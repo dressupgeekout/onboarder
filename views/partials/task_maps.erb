@@ -1,2 +1,20 @@
-<a name="new-taskmap"></a><h2>Create a Task Map</h2>
-<p class="info"><em>Coming soon</em></p>
+<a name="new-taskmap"></a><h2>Create a task map</h2>
+
+<form method="POST" action="/taskmaps">
+  <table>
+    <tr>
+      <td>Name</td>
+      <td><input type="text" name="taskmap-name"/></td>
+      <td style="width:13em;">
+        <p class="small info">This is the name of a <em>class of employee</em> or
+        a department, e.g. "Engineer" or "Sales."</p>
+      </td>
+    </tr>
+
+    <tr>
+      <td><input type="submit" value="Add"/></td>
+      <td></td>
+      <td></td>
+    </tr>
+  </table>
+</form>
