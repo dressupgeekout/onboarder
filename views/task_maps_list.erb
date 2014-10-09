@@ -1,10 +1,28 @@
 <h2>Current task maps</h2>
 
-<ul>
-  <% all_taskmaps.each do |taskmap| %>
-    <li><%= taskmap.name %></li>
-  <% end %>
-</ul>
+<form method="POST" action="#">
+  <table id="task-table" class="highlightable-table">
+    <tr>
+      <th></th>
+      <% task_map.each do |mapping| %>
+        <th><%= mapping.subject %></th>
+      <% end %>
+    </tr>
+
+    <% all_taskmaps.each do |taskmap| %>
+      <tr>
+        <td><%= taskmap.name %></td>
+        <% task_map.each do |mapping| %>
+          <td>
+            <input type="checkbox" name="" value=""/>
+          </td>
+        <% end %>
+      </tr>
+    <% end %>
+  </table>
+
+  <p><input type="submit" value="Save"/></p>
+</form>
 
 <hr/>
 

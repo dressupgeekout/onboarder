@@ -122,6 +122,23 @@ class Onboarder
       return ERB.new(templ, nil, "<>").result(binding)
     end
 
+    def select_some_tasks(form_id)
+      templ = <<-EOF
+        <ul style="margin:0em; padding:0em;">
+          <% task_map.each do |mapping| %>
+            <li style="list-style:none;">
+              <input
+                form="<%= form_id %>" type="checkbox" name="x" value="y"
+                <% if true %>checked<% end %>
+              />
+              <label><%= mapping.subject %></label>
+            </li>
+          <% end %>
+        </ul>
+      EOF
+      return ERB.new(templ, nil, "<>").result(binding)
+    end
+
     # This actually sets the session variable.
     def set_flash_success(msg)
       session[:flash] = [true, msg]

@@ -104,3 +104,9 @@ a:hover {
 .flash-fail a:hover {
   color: #f86;
 }
+
+#task-table tr th {
+  font-weight: normal;
+  font-size: small;
+  width: 6em;
+}
