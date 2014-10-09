@@ -96,3 +96,11 @@ a:hover {
   background-color: #900;
   color: #fff;
 }
+
+.flash-fail a {
+  color: #f53;
+}
+
+.flash-fail a:hover {
+  color: #f86;
+}

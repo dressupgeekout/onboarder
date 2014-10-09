@@ -1,0 +1,6 @@
+.bundle/
+Gemfile.lock
+db/
+script/onboard.py
+test/
+vendor/

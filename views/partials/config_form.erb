@@ -1,7 +1,7 @@
 <a name="configuration"></a><h2>Configuration</h2>
 
 <% proj = config(:default_redmine_proj) %>
-<%= flash("You need to configure this!", true) if not proj or proj.empty? %>
+<%= flash("You need to configure this!", false) if not proj or proj.empty? %>
 
 <form method="POST" action="/config">
   <table>
