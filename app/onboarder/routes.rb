@@ -143,7 +143,7 @@ class Onboarder
 
     set_flash_success(
       "Task #{params["task-name"].inspect} successfully added.")
-    redirect to("/")
+    redirect to("/taskmaps")
   end
 
   delete("/tasks") do
