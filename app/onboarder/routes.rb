@@ -138,7 +138,7 @@ class Onboarder
   post("/tasks") do
     if params["task-name"] =~ EMPTY or params["role-name"] =~ EMPTY
       set_flash_failure("Sorry, please define a role first.")
-      redirect to("/taskmaps")
+      return erb(:"task_table")
     end
 
     @@db.transaction do
@@ -152,7 +152,7 @@ class Onboarder
     set_flash_success(sprintf(
       "Task %s successfully added to the task map.",
       params["task-name"].inspect))
-    redirect to("/taskmaps")
+    redirect to("/tasktable")
   end
 
   delete("/tasks") do
@@ -163,18 +163,14 @@ class Onboarder
     set_flash_success(sprintf(
       "Successfully removed task %s from the task map.",
       params["task-name"].inspect))
-    redirect to("/taskmaps")
-  end
-
-  get("/taskmaps/?") do
-    erb(:task_maps_list)
+    redirect to("/tasktable")
   end
 
   post("/taskmaps") do
     if params["taskmap-name"] =~ EMPTY
       set_flash_failure("Sorry, please enter a nonblank name.")
       status(403)
-      return erb(:task_maps_list)
+      return erb(:index)
     end
 
     @@db.transaction do
@@ -182,12 +178,16 @@ class Onboarder
       @@db[:taskmaps].push(tm)
     end
 
-    redirect to("/taskmaps")
+    redirect to("/")
   end
 
   delete("/taskmaps") do
     status(501)
     return
+  end
+
+  get("/tasktable/?") do
+    erb(:task_table)
   end
 
   # Currently, the strategy is to clear the entire list of tasks for each
@@ -206,6 +206,6 @@ class Onboarder
 
     status(200)
     set_flash_success("Task table updated successfully.")
-    return erb(:task_maps_list)
+    return erb(:task_table)
   end
 end
