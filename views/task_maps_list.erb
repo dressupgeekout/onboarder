@@ -1,6 +1,6 @@
 <h2>Current task maps</h2>
 
-<form method="POST" action="#">
+<form method="POST" action="/tasktable">
   <table id="task-table" class="highlightable-table">
     <tr>
       <th></th>
@@ -16,8 +16,8 @@
           <td>
             <input type="checkbox"
               <% if taskmap.tasks.include?(mapping.subject) %>checked<% end %>
-              name="<%= mapping.subject %>"
-              value="<%= taskmap.name %>-<%= mapping.subject %>"
+              name="<%= taskmap.name %>-<%= mapping.subject %>"
+              value="1"
             />
           </td>
         <% end %>

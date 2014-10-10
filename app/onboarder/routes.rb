@@ -179,4 +179,22 @@ class Onboarder
     status(501)
     return
   end
+
+  # Currently, the strategy is to clear the entire list of tasks for each
+  # class of employee, then re-populate it according to the HTML form.
+  post("/tasktable") do
+    @@db.transaction do
+      @@db[:taskmaps].each { |tm| tm.tasks = [] }
+      request.POST.each do |thang, _|
+        split = thang.split("-", 2)
+        tm_name = split[0]
+        subject = split[1]
+        tm = @@db[:taskmaps].detect { |t| t.name == tm_name }
+        tm ? tm.tasks.push(subject) : next
+      end
+    end
+
+    status(200)
+    return erb(:task_maps_list)
+  end
 end
