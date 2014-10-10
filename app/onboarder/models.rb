@@ -1,6 +1,6 @@
 require 'virtus'
 
-# The Role is an abstraction of a User.
+# The Role is an abstraction of a Redmine user.
 class Role
   include Virtus.model
   include Comparable
@@ -46,5 +46,32 @@ class Task
       "role" => @role,
       "long_descr" => @long_descr,
     }
+  end
+end
+
+# A TaskMap represents the list of tasks that are necessary for a certain
+# class of employee. For example, engineers have different onboarding
+# requirements from sales people.
+#
+# The @tasks attribute represents a list of Task objects, which are
+# identified here by their @subject attribute.
+class TaskMap
+  include Virtus.model
+  include Comparable
+  attribute :name, String
+  attribute :tasks, Array[String]
+
+  def <=>(other)
+    if self.name < other.name
+      return -1
+    elsif self.name > other.name
+      return 1
+    else
+      return 0
+    end
+  end
+
+  def to_h
+    return {"name" => @name, "tasks" => @tasks}
   end
 end

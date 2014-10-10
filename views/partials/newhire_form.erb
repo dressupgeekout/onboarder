@@ -3,7 +3,8 @@
 
   <ul class="info">
     <li>When you click "Submit," all of the tasks described in the <a
-    href="#task-map">task map</a> will automatically be set up in Redmine.</li>
+    href="/taskmaps">task map</a> for the appropriate kind of employee will
+    automatically be set up in Redmine.</li>
 
     <li><strong>Note:</strong> Lots of emails will be sent. Please be sure you
     want to do this.</li>
@@ -18,6 +19,11 @@
     <tr>
       <td>Last name</td>
       <td><input type="text" name="newhire-name-last"/></td>
+    </tr>
+
+    <tr>
+      <td>Department</td>
+      <td><%= select_any_taskmap("newhire-klass") %></td>
     </tr>
 
     <tr>

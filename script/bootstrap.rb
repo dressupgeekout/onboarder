@@ -43,6 +43,7 @@ db.transaction do
 
   db[:tasks] = []
   db[:roles] = []
+  db[:taskmaps] = []
 end
 
 puts "K, thanks. Database #{File.basename(dbpath).inspect} created."

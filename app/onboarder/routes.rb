@@ -27,9 +27,9 @@ class Onboarder
   delete("/roles") do
     if task_map.any? { |t| t.role == params["role-name"] }
       status(403)
-      set_flash_failure(
-        "Please remove all of the tasks assigned to the " +
-        "#{params["role-name"].inspect} role, first.")
+      set_flash_failure(sprintf(
+        "Please remove all of the tasks assigned to the %s role, first.",
+        params["role-name"].inspect))
       redirect to("/")
     end
 
@@ -37,9 +37,8 @@ class Onboarder
       @@db[:roles].delete_if { |r| r.name == params["role-name"] }
     end
 
-    set_flash_success(  
-      "Successfully removed the #{params["role-name"].inspect} role.")
-
+    set_flash_success(sprintf(
+      "Successfully removed the %s role.", params["role-name"].inspect))
     redirect to("/")
   end
 
@@ -48,6 +47,12 @@ class Onboarder
 
     if name_fields.any? { |n| n =~ EMPTY }
       set_flash_failure("Sorry, please enter a nonblank name.")
+      status(403)
+      return erb(:index)
+    end
+
+    if params["newhire-klass"] =~ EMPTY
+      set_flash_failure("Sorry, please specify an employee class.")
       status(403)
       return erb(:index)
     end
@@ -95,8 +100,13 @@ class Onboarder
     all_issue_ids = []
     all_issue_ids << parent_issue_id
 
+    relevant_task_subjects = tasks_from_name(params["newhire-klass"])
+    relevant_tasks = task_map.select { |t|
+      relevant_task_subjects.include?(t.subject)
+    }
+
     # Now post all of the "real" issues
-    task_map.each do |task|
+    relevant_tasks.each do |task|
       issue_id = @@redmine_cxn.post_issue({
         "project_id" => default_project_id,
         "subject" => sprintf("%s - %s", newhire_fullname, task.subject),
@@ -111,6 +121,10 @@ class Onboarder
     redirect to("/")
   end
 
+  get("/config/?") do
+    erb(:configuration)
+  end
+
   post("/config") do
     @@db.transaction do
       conf = @@db[:config]
@@ -118,13 +132,13 @@ class Onboarder
       conf[:hiring_manager] = params["hiring-manager"]
     end
     set_flash_success("Successfully updated.")
-    redirect to("/")
+    redirect to("/config")
   end
 
   post("/tasks") do
     if params["task-name"] =~ EMPTY or params["role-name"] =~ EMPTY
       set_flash_failure("Sorry, please define a role first.")
-      redirect to("/")     
+      return erb(:"task_table")
     end
 
     @@db.transaction do
@@ -135,9 +149,10 @@ class Onboarder
       }))
     end
 
-    set_flash_success(
-      "Task #{params["task-name"].inspect} successfully added.")
-    redirect to("/")
+    set_flash_success(sprintf(
+      "Task %s successfully added to the task map.",
+      params["task-name"].inspect))
+    redirect to("/tasktable")
   end
 
   delete("/tasks") do
@@ -145,8 +160,52 @@ class Onboarder
       @@db[:tasks].delete_if { |t| t.subject == params["task-name"] }
     end
 
-    set_flash_success(
-      "Successfully removed task #{params["task-name"].inspect}.")
+    set_flash_success(sprintf(
+      "Successfully removed task %s from the task map.",
+      params["task-name"].inspect))
+    redirect to("/tasktable")
+  end
+
+  post("/taskmaps") do
+    if params["taskmap-name"] =~ EMPTY
+      set_flash_failure("Sorry, please enter a nonblank name.")
+      status(403)
+      return erb(:index)
+    end
+
+    @@db.transaction do
+      tm = TaskMap.new({:name => params["taskmap-name"]})
+      @@db[:taskmaps].push(tm)
+    end
+
     redirect to("/")
+  end
+
+  delete("/taskmaps") do
+    status(501)
+    return
+  end
+
+  get("/tasktable/?") do
+    erb(:task_table)
+  end
+
+  # Currently, the strategy is to clear the entire list of tasks for each
+  # class of employee, then re-populate it according to the HTML form.
+  post("/tasktable") do
+    @@db.transaction do
+      @@db[:taskmaps].each { |tm| tm.tasks = [] }
+      request.POST.each do |thang, _|
+        split = thang.split("-", 2)
+        tm_name = split[0]
+        subject = split[1]
+        tm = @@db[:taskmaps].detect { |t| t.name == tm_name }
+        tm ? tm.tasks.push(subject) : next
+      end
+    end
+
+    status(200)
+    set_flash_success("Task table updated successfully.")
+    return erb(:task_table)
   end
 end

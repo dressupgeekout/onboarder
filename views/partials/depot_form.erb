@@ -1,0 +1,25 @@
+<a name="new-taskmap"></a><h2>Define a department</h2>
+
+<ul class="info">
+  <li><p>A <strong>department</strong> is used to define the list of tasks that
+  are required for each new employee of a particular "kind."</p></li>
+
+  <li><p>For example, onboarding an engineer involves a setup process that is
+  different from onboarding a salesperson. You can declare that distinction
+  here.</p></li>
+</ul>
+
+
+<form method="POST" action="/taskmaps">
+  <table>
+    <tr>
+      <td>Department name</td>
+      <td><input type="text" name="taskmap-name"/></td>
+    </tr>
+
+    <tr>
+      <td><input type="submit" value="Add"/></td>
+      <td></td>
+    </tr>
+  </table>
+</form>

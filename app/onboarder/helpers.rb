@@ -42,6 +42,10 @@ class Onboarder
       return @@redmine_cxn.all_projects
     end
 
+    def all_taskmaps()
+      return @@db.transaction { @@db[:taskmaps] }.sort
+    end
+
     def task_map()
       return @@db.transaction { @@db[:tasks] }.sort
     end
@@ -65,6 +69,12 @@ class Onboarder
     def user_login_to_id(login)
       user = user_from_login(login)
       return user["id"]
+    end
+
+    def tasks_from_name(name)
+      tm = \
+        @@db.transaction { @@db[:taskmaps].detect { |tm| tm.name == name }}
+      return tm.tasks
     end
 
     # This returns a blob of HTML: a <select> element with a bunch of
@@ -103,6 +113,35 @@ class Onboarder
             </option>
           <% end %>
         </select>
+      EOF
+      return ERB.new(templ, nil, "<>").result(binding)
+    end
+
+    # Renders a HTML <select> element with the provided "name" attribute.
+    def select_any_taskmap(name)
+      templ = <<-EOF
+        <select name="<%= name %>">
+          <% all_taskmaps.each do |taskmap| %>
+            <option value="<%= taskmap.name %>"><%= taskmap.name %></option>
+          <% end %>
+        </select>
+      EOF
+      return ERB.new(templ, nil, "<>").result(binding)
+    end
+
+    def select_some_tasks(form_id)
+      templ = <<-EOF
+        <ul style="margin:0em; padding:0em;">
+          <% task_map.each do |mapping| %>
+            <li style="list-style:none;">
+              <input
+                form="<%= form_id %>" type="checkbox" name="x" value="y"
+                <% if true %>checked<% end %>
+              />
+              <label><%= mapping.subject %></label>
+            </li>
+          <% end %>
+        </ul>
       EOF
       return ERB.new(templ, nil, "<>").result(binding)
     end
