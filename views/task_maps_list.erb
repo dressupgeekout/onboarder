@@ -14,7 +14,11 @@
         <td><%= taskmap.name %></td>
         <% task_map.each do |mapping| %>
           <td>
-            <input type="checkbox" name="" value=""/>
+            <input type="checkbox"
+              <% if taskmap.tasks.include?(mapping.subject) %>checked<% end %>
+              name="<%= mapping.subject %>"
+              value="<%= taskmap.name %>-<%= mapping.subject %>"
+            />
           </td>
         <% end %>
       </tr>
