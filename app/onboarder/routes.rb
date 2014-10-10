@@ -27,9 +27,9 @@ class Onboarder
   delete("/roles") do
     if task_map.any? { |t| t.role == params["role-name"] }
       status(403)
-      set_flash_failure(
-        "Please remove all of the tasks assigned to the " +
-        "#{params["role-name"].inspect} role, first.")
+      set_flash_failure(sprintf(
+        "Please remove all of the tasks assigned to the %s role, first.",
+        params["role-name"].inspect))
       redirect to("/")
     end
 
@@ -37,9 +37,8 @@ class Onboarder
       @@db[:roles].delete_if { |r| r.name == params["role-name"] }
     end
 
-    set_flash_success(  
-      "Successfully removed the #{params["role-name"].inspect} role.")
-
+    set_flash_success(sprintf(
+      "Successfully removed the %s role.", params["role-name"].inspect))
     redirect to("/")
   end
 
@@ -146,8 +145,9 @@ class Onboarder
       }))
     end
 
-    set_flash_success(
-      "Task #{params["task-name"].inspect} successfully added.")
+    set_flash_success(sprintf(
+      "Task %s successfully added to the task map.",
+      params["task-name"].inspect))
     redirect to("/taskmaps")
   end
 
@@ -156,8 +156,9 @@ class Onboarder
       @@db[:tasks].delete_if { |t| t.subject == params["task-name"] }
     end
 
-    set_flash_success(
-      "Successfully removed task #{params["task-name"].inspect}.")
+    set_flash_success(sprintf(
+      "Successfully removed task %s from the task map.",
+      params["task-name"].inspect))
     redirect to("/taskmaps")
   end
 
@@ -200,6 +201,7 @@ class Onboarder
     end
 
     status(200)
+    set_flash_success("Task table updated successfully.")
     return erb(:task_maps_list)
   end
 end
