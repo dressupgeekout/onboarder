@@ -121,6 +121,10 @@ class Onboarder
     redirect to("/")
   end
 
+  get("/config/?") do
+    erb(:configuration)
+  end
+
   post("/config") do
     @@db.transaction do
       conf = @@db[:config]
@@ -128,7 +132,7 @@ class Onboarder
       conf[:hiring_manager] = params["hiring-manager"]
     end
     set_flash_success("Successfully updated.")
-    redirect to("/")
+    redirect to("/config")
   end
 
   post("/tasks") do
