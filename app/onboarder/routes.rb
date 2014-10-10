@@ -101,8 +101,13 @@ class Onboarder
     all_issue_ids = []
     all_issue_ids << parent_issue_id
 
+    relevant_task_subjects = tasks_from_name(params["newhire-klass"])
+    relevant_tasks = task_map.select { |t|
+      relevant_task_subjects.include?(t.subject)
+    }
+
     # Now post all of the "real" issues
-    task_map.each do |task|
+    relevant_tasks.each do |task|
       issue_id = @@redmine_cxn.post_issue({
         "project_id" => default_project_id,
         "subject" => sprintf("%s - %s", newhire_fullname, task.subject),

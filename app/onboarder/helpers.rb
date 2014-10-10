@@ -71,6 +71,12 @@ class Onboarder
       return user["id"]
     end
 
+    def tasks_from_name(name)
+      tm = \
+        @@db.transaction { @@db[:taskmaps].detect { |tm| tm.name == name }}
+      return tm.tasks
+    end
+
     # This returns a blob of HTML: a <select> element with a bunch of
     # <options> which refers to everyone inside Redmine. 
     #
@@ -111,9 +117,10 @@ class Onboarder
       return ERB.new(templ, nil, "<>").result(binding)
     end
 
-    def select_any_taskmap(id)
+    # Renders a HTML <select> element with the provided "name" attribute.
+    def select_any_taskmap(name)
       templ = <<-EOF
-        <select name="" id="">
+        <select name="<%= name %>">
           <% all_taskmaps.each do |taskmap| %>
             <option value="<%= taskmap.name %>"><%= taskmap.name %></option>
           <% end %>
