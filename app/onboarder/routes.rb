@@ -44,8 +44,8 @@ class Onboarder
 
   post("/newhire") do
     name_fields = [params["newhire-name-first"], params["newhire-name-last"]]
-    date_fields = [params["newhire-startdate-month"],
-      params["newhire-startdate-day"], params["newhire-startdate-year"]]
+    date_fields = [params["newhire-startdate-year"],
+      params["newhire-startdate-month"], params["newhire-startdate-day"]]
 
     if name_fields.any? { |n| n =~ EMPTY }
       set_flash_failure("Sorry, please enter a nonblank name.")
@@ -103,6 +103,7 @@ class Onboarder
       "subject" => parent_issue_subject,
       "description" => "Parent ticket for onboarding #{newhire_fullname}",
       "assigned_to_id" => user_login_to_id(config(:hiring_manager)),
+      "due_date" => sprintf("%d-%d-%d", *date_fields),
     })
 
     all_issue_ids = []
@@ -121,6 +122,7 @@ class Onboarder
         "description" => task.long_descr,
         "assigned_to_id" => user_login_to_id(find_role_obj(task.role).user),
         "parent_issue_id" => parent_issue_id,
+        "due_date" => sprintf("%d-%d-%d", *date_fields),
       })
       all_issue_ids << issue_id
     end
