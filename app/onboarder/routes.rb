@@ -5,6 +5,15 @@ class Onboarder
     erb(:index)
   end
 
+  get("/attachments/?") do
+    erb(:attachments)
+  end
+
+  post("/attachments") do
+    status(501)
+    return
+  end
+
   post("/roles") do
     if params["role-name"] =~ EMPTY
       set_flash_failure("Sorry, please enter a nonblank name.")
