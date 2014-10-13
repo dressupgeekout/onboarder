@@ -11,7 +11,6 @@ class Onboarder
   end
 
   post("/attachments") do
-    upload_dir = File.join(settings.root, "upload")
     inf = request.env["rack.input"]
 
     if not inf
@@ -20,7 +19,7 @@ class Onboarder
       return erb(:attachments)
     end
 
-    outfname = File.join(upload_dir, params["fyle"][:filename])
+    outfname = File.join(settings.uploaddir, params["fyle"][:filename])
 
     if File.file?(outfname)
       status(409)

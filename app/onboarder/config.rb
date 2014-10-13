@@ -17,6 +17,7 @@ class Onboarder < Sinatra::Base
   configure do
     set :root, File.join(File.dirname(__FILE__), "..", "..")
     set :dbdir, File.join(settings.root, "db")
+    set :uploaddir, File.join(settings.root, "upload")
     enable :sessions
     enable :method_override
 
