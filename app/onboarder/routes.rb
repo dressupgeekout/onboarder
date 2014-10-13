@@ -52,65 +52,53 @@ class Onboarder
   end
 
   post("/newhire") do
+    complain = proc do |msg|
+      set_flash_failure(msg)
+      status(403)
+      erb(:index)
+    end
+
     name_fields = [params["newhire-name-first"], params["newhire-name-last"]]
     date_fields = [params["newhire-startdate-year"],
       params["newhire-startdate-month"], params["newhire-startdate-day"]]
 
     if name_fields.any? { |n| n =~ EMPTY }
-      set_flash_failure("Sorry, please enter a nonblank name.")
-      status(403)
-      return erb(:index)
+      return complain.call("Sorry, please enter a nonblank name.")
     end
 
     if params["newhire-klass"] =~ EMPTY
-      set_flash_failure("Sorry, please specify an employee class.")
-      status(403)
-      return erb(:index)
+      return complain.call("Sorry, please specify an employee class.")
     end
 
     if date_fields.any? { |d| d =~ EMPTY }
-      set_flash_failure("Sorry, please enter a valid date.")
-      status(403)
-      return erb(:index)
+      return complain.call("Sorry, please enter a valid date.")
     end
 
     begin
       if Time.new(*(date_fields.map { |x| x.to_i })) < Time.now
-        set_flash_failure("Sorry, you must enter a date in the future.")
-        status(403)
-        return erb(:index)
+        return complain.call("Sorry, you must enter a date in the future.")
       end
     rescue ArgumentError
-      set_flash_failure("Sorry, please enter a valid date.")
-      status(403)
-      return erb(:index)
+      return complain.call("Sorry, please enter a valid date.")
     end
 
     if !config(:default_redmine_proj) or config(:default_redmine_proj).empty?
-      set_flash_failure(%q(
+      return complain.call(%q(
         Sorry, please define the Redmine project.
         <a href="#configuration">Click here.</a>
       ))
-      status(403)
-      return erb(:index)
     end
 
     if !config(:hiring_manager) or config(:hiring_manager).empty?
-      set_flash_failure("Sorry, please establish the hiring manager.")
-      status(403)
-      return erb(:index)
+      return complain.call("Sorry, please establish the hiring manager.")
     end
 
     if !task_map or task_map.empty?
-      set_flash_failure("Sorry, please define at least one task.")
-      status(403)
-      return erb(:index)
+      return complain.call("Sorry, please define at least one task.")
     end
 
     if !all_roles or all_roles.empty?
-      set_flash_failure("Sorry, please define at least one role.")
-      status(403)
-      return erb(:index)
+      return complain.call("Sorry, please define at least one role.")
     end
 
     newhire_fullname = sprintf("%s %s", params["newhire-name-first"],

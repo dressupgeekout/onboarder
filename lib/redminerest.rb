@@ -90,7 +90,6 @@ class RedmineRest
     setup
     @req = Net::HTTP::Post.new(@endpoint)
     @req["Content-Type"] = "application/json"
-    @req.content_type = "application/json"
     auth
   end
 
