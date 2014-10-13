@@ -44,6 +44,8 @@ class Onboarder
 
   post("/newhire") do
     name_fields = [params["newhire-name-first"], params["newhire-name-last"]]
+    date_fields = [params["newhire-startdate-month"],
+      params["newhire-startdate-day"], params["newhire-startdate-year"]]
 
     if name_fields.any? { |n| n =~ EMPTY }
       set_flash_failure("Sorry, please enter a nonblank name.")
@@ -53,6 +55,12 @@ class Onboarder
 
     if params["newhire-klass"] =~ EMPTY
       set_flash_failure("Sorry, please specify an employee class.")
+      status(403)
+      return erb(:index)
+    end
+
+    if date_fields.any? { |d| d =~ EMPTY }
+      set_flash_failure("Sorry, please enter a valid date.")
       status(403)
       return erb(:index)
     end
