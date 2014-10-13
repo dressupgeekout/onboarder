@@ -15,7 +15,7 @@ class Onboarder
   post("/attachments") do
     inf = request.env["rack.input"]
 
-    if not inf
+    if !inf or !params["fyle"]
       status(400)
       set_flash_failure("Sorry, please select a file to upload.")
       return erb(:attachments)
