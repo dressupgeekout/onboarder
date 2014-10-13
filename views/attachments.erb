@@ -5,6 +5,15 @@
   every new onboarding process.</li>
 </ul>
 
+<ul>
+  <% all_uploads.each do |f| %>
+    <li><%= f %></li>
+  <% end %>
+</ul>
+
+
+<a name="new-attachment"></a><h2>Upload a new file</h2>
+
 <form method="POST" action="#" enctype="multipart/form-data">
   <input type="file" name="fyle"/>
   <input type="submit" value="Upload"/>
