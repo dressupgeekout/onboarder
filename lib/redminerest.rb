@@ -61,11 +61,12 @@ class RedmineRest
   # REST endpoints.
   def post_attachment(file_s)
     setup
-    req = Net::HTTP::Post.new("/uploads.json")
-    req["Content-Type"] = "application/octet-stream"
-    req["Content-Length"] = file_s.length
-    req.body = file_s
-    res = @http.request(req)
+    @req = Net::HTTP::Post.new("/uploads.json")
+    auth
+    @req["Content-Type"] = "application/octet-stream"
+    @req["Content-Length"] = file_s.length
+    @req.body = file_s
+    res = @http.request(@req)
     return JSON.load(res.body)["upload"]["token"]
   end
 
