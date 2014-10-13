@@ -5,11 +5,19 @@
   every new onboarding process.</li>
 </ul>
 
-<ul>
+<table class="highlightable-table">
   <% all_uploads.each do |f| %>
-    <li><%= f %></li>
+    <tr>
+      <td><%= f %></td>
+      <td>
+        <form method="POST" action="/attachments/<%= f %>"/>
+          <input type="hidden" name="_method" value="DELETE"/>
+          <input type="submit" value="Delete"/>
+        </form>
+      </td>
+    </tr>
   <% end %>
-</ul>
+</table>
 
 
 <a name="new-attachment"></a><h2>Upload a new file</h2>

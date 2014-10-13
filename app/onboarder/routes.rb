@@ -1,3 +1,5 @@
+require 'fileutils'
+
 class Onboarder
   EMPTY = /\A\s*\z/
   BUFSIZ = 1024 * 4
@@ -35,6 +37,29 @@ class Onboarder
     status(201)
     set_flash_success(sprintf("Successfully upload file %s",
       File.basename(outfname).inspect))
+    return erb(:attachments)
+  end
+
+  delete("/attachments/:filename") do
+    real_path = File.join(settings.uploaddir, params[:filename])
+
+    if not File.file?(real_path)
+      status(404)
+      return erb(:attachments)
+    end
+
+    begin
+      FileUtils.rm(real_path)
+    rescue
+      status(500)
+      set_flash_failure(sprintf("Couldn't remove attachment %s !",
+        params[:filename]))
+      return erb(:attachments)
+    end
+
+    status(200)
+    set_flash_success(sprintf("Successfully removed attachment %s.",
+      params[:filename]))
     return erb(:attachments)
   end
 
