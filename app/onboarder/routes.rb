@@ -65,6 +65,18 @@ class Onboarder
       return erb(:index)
     end
 
+    begin
+      if Time.new(*(date_fields.map { |x| x.to_i })) < Time.now
+        set_flash_failure("Sorry, you must enter a date in the future.")
+        status(403)
+        return erb(:index)
+      end
+    rescue ArgumentError
+      set_flash_failure("Sorry, please enter a valid date.")
+      status(403)
+      return erb(:index)
+    end
+
     if !config(:default_redmine_proj) or config(:default_redmine_proj).empty?
       set_flash_failure(%q(
         Sorry, please define the Redmine project.
@@ -103,7 +115,7 @@ class Onboarder
       "subject" => parent_issue_subject,
       "description" => "Parent ticket for onboarding #{newhire_fullname}",
       "assigned_to_id" => user_login_to_id(config(:hiring_manager)),
-      "due_date" => sprintf("%d-%d-%d", *date_fields),
+      "due_date" => sprintf("%04d-%02d-%02d", *date_fields),
     })
 
     all_issue_ids = []
@@ -122,7 +134,7 @@ class Onboarder
         "description" => task.long_descr,
         "assigned_to_id" => user_login_to_id(find_role_obj(task.role).user),
         "parent_issue_id" => parent_issue_id,
-        "due_date" => sprintf("%d-%d-%d", *date_fields),
+        "due_date" => sprintf("%04d-%02d-%02d", *date_fields),
       })
       all_issue_ids << issue_id
     end
