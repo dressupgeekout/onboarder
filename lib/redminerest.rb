@@ -33,6 +33,14 @@ class RedmineRest
     return JSON.load(res.body)["projects"].sort_by { |proj| proj["name"] }
   end
 
+  # => (Array of Hash)
+  def all_issues()
+    @endpoint = "/issues.json"
+    setup_get
+    res = @http.request(@req)
+    return JSON.load(res.body)["issues"].sort_by { |issue| issue["id"] }
+  end
+
   # The structure of the issue_obj Hash is specified here:
   #     http://www.redmine.org/projects/redmine/wiki/Rest_Issues
   #
