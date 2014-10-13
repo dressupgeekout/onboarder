@@ -54,6 +54,21 @@ class RedmineRest
     return JSON.load(res.body)["issue"]["id"]
   end
 
+  # Returns the token (a String) representing the newly uploaded file.
+  #
+  # Internally, this doesn't use the shared #setup_post stuff because what
+  # needs to happen here is actually very different compared to the other
+  # REST endpoints.
+  def post_attachment(file_s)
+    setup
+    req = Net::HTTP::Post.new("/uploads.json")
+    req["Content-Type"] = "application/octet-stream"
+    req["Content-Length"] = file_s.length
+    req.body = file_s
+    res = @http.request(req)
+    return JSON.load(res.body)["upload"]["token"]
+  end
+
   private
 
   def setup
