@@ -1,5 +1,6 @@
 class Onboarder
   EMPTY = /\A\s*\z/
+  BUFSIZ = 1024 * 4
 
   get("/") do
     erb(:index)
@@ -10,8 +11,32 @@ class Onboarder
   end
 
   post("/attachments") do
-    status(501)
-    return
+    upload_dir = File.join(settings.root, "upload")
+    inf = request.env["rack.input"]
+
+    if not inf
+      status(400)
+      set_flash_failure("Sorry, please select a file to upload.")
+      return erb(:attachments)
+    end
+
+    outfname = File.join(upload_dir, params["fyle"][:filename])
+
+    if File.file?(outfname)
+      status(409)
+      set_flash_failure("Sorry, there already is a file with that name.")
+      return erb(:attachments)
+    end
+
+    outf = File.new(outfname, "w")
+    buf = ""
+    outf.write(buf) while (buf = inf.read(BUFSIZ))
+    outf.close
+
+    status(201)
+    set_flash_success(sprintf("Successfully upload file %s",
+      File.basename(outfname).inspect))
+    return erb(:attachments)
   end
 
   post("/roles") do
