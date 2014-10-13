@@ -2,6 +2,7 @@ require 'sinatra/base'
 require 'erb'
 require 'json'
 require 'pstore'
+require 'fileutils'
 
 $LOAD_PATH.unshift File.join(File.dirname(__FILE__), "..", "..", "lib")
 require 'redminerest'
@@ -23,6 +24,10 @@ class Onboarder < Sinatra::Base
 
     dbfile = File.join(settings.dbdir,
       "onboarder-#{settings.environment}.pstore")
+
+    if not File.directory?(settings.uploaddir)
+      FileUtils.mkdir_p(settings.uploaddir)
+    end
 
     if !File.file?(dbfile)
       $stderr.puts("Cannot find the database. Please bootstrap it.")
