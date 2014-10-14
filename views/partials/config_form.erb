@@ -1,7 +1,13 @@
 <a name="configuration"></a><h2>Configuration</h2>
 
-<% proj = config(:default_redmine_proj) %>
-<%= flash("You need to configure this!", false) if not proj or proj.empty? %>
+<%
+  proj = config(:default_redmine_proj)
+  hr_mgmr = config(:hiring_manager)
+%>
+
+<% if !proj or proj.empty? or !hr_mgmr or hr_mgmr.empty? %>
+  <%= flash("You need to configure this!", false) %>
+<% end %>
 
 <form method="POST" action="/config">
   <table>
@@ -9,6 +15,7 @@
       <td>Default Redmine project for onboarding tasks</td>
       <td>
         <select name="default-redmine-proj">
+          <option value="">--</option>
           <% all_redmine_projects.each do |proj| %>
             <option value="<%= proj["identifier"] %>"
               <%= "selected" if proj["identifier"] == config(:default_redmine_proj) %>
@@ -27,6 +34,7 @@
       </td>
       <td>
         <select name="hiring-manager">
+          <option value="">--</option>
           <% all_redmine_users.each do |user| %>
             <option value="<%= user["login"] %>"
               <%= "selected" if user["login"] == config(:hiring_manager) %>
