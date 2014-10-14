@@ -214,11 +214,6 @@ class Onboarder
     redirect to("/")
   end
 
-  delete("/taskmaps") do
-    status(501)
-    return
-  end
-
   get("/tasktable/?") do
     erb(:task_table)
   end
