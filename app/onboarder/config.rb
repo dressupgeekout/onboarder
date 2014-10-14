@@ -2,7 +2,6 @@ require 'sinatra/base'
 require 'erb'
 require 'json'
 require 'pstore'
-require 'fileutils'
 
 $LOAD_PATH.unshift File.join(File.dirname(__FILE__), "..", "..", "lib")
 require 'redminerest'

@@ -1,8 +1,5 @@
-require 'fileutils'
-
 class Onboarder
   EMPTY = /\A\s*\z/
-  BUFSIZ = 1024 * 4
 
   get("/") do
     erb(:index)
