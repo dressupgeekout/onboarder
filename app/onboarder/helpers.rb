@@ -77,6 +77,11 @@ class Onboarder
       return tm.tasks
     end
 
+    # A wrapepr around ERB which cuts out plenty of unecessary whitespace.
+    def _erb(templ, _binding)
+      return ERB.new(templ, nil, "<>").result(_binding)
+    end
+
     # This returns a blob of HTML: a <select> element with a bunch of
     # <options> which refers to everyone inside Redmine. 
     #
@@ -96,7 +101,7 @@ class Onboarder
           <% end %>
         </select>
       EOF
-      return ERB.new(templ, nil, "<>").result(binding)
+      return _erb(templ, binding)
     end
 
     # The form will see the role's name.
@@ -114,7 +119,7 @@ class Onboarder
           <% end %>
         </select>
       EOF
-      return ERB.new(templ, nil, "<>").result(binding)
+      return _erb(templ, binding)
     end
 
     # Renders a HTML <select> element with the provided "name" attribute.
@@ -126,7 +131,7 @@ class Onboarder
           <% end %>
         </select>
       EOF
-      return ERB.new(templ, nil, "<>").result(binding)
+      return _erb(templ, binding)
     end
 
     def select_some_tasks(form_id)
@@ -143,7 +148,7 @@ class Onboarder
           <% end %>
         </ul>
       EOF
-      return ERB.new(templ, nil, "<>").result(binding)
+      return _erb(templ, binding)
     end
 
     # This actually sets the session variable.
