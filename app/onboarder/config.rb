@@ -18,16 +18,11 @@ class Onboarder < Sinatra::Base
   configure do
     set :root, File.join(File.dirname(__FILE__), "..", "..")
     set :dbdir, File.join(settings.root, "db")
-    set :uploaddir, File.join(settings.root, "upload")
     enable :sessions
     enable :method_override
 
     dbfile = File.join(settings.dbdir,
       "onboarder-#{settings.environment}.pstore")
-
-    if not File.directory?(settings.uploaddir)
-      FileUtils.mkdir_p(settings.uploaddir)
-    end
 
     if !File.file?(dbfile)
       $stderr.puts("Cannot find the database. Please bootstrap it.")

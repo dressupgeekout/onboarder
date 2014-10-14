@@ -1,4 +1,4 @@
-<form method="POST" action="/newhire">
+<form method="POST" action="/newhire" enctype="multipart/form-data">
   <h2>Set up tasks for a new hire</h2>
 
   <ul class="info">
@@ -14,16 +14,19 @@
     <tr>
       <td>First name</td>
       <td><input type="text" name="newhire-name-first"/></td>
+      <td></td>
     </tr>
 
     <tr>
       <td>Last name</td>
       <td><input type="text" name="newhire-name-last"/></td>
+      <td></td>
     </tr>
 
     <tr>
       <td>Department</td>
       <td><%= select_any_taskmap("newhire-klass") %></td>
+      <td></td>
     </tr>
 
     <tr>
@@ -33,6 +36,17 @@
         <input type="text" size="2" name="newhire-startdate-day"/>/
         <input type="text" size="4" name="newhire-startdate-year"/>
       </td>
+      <td></td>
+    </tr>
+
+    <tr>
+      <td>Attach file(s)</td>
+      <td>
+        <ul id="attach-area-list">
+          <input id="nfyles-input" type="hidden" name="nfyles" value="0"/>
+        </ul>
+      </td>
+      <td><a id="add-another-button" class="small" href="#">Add another&hellip;</a></td>
     </tr>
 
     <tr>
@@ -40,3 +54,5 @@
     </tr>
   </table>
 </form>
+
+<script type="text/javascript" src="/js/onboarder.js"></script>
