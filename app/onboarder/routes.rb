@@ -175,11 +175,13 @@ class Onboarder
     end
 
     @@db.transaction do
-      @@db[:tasks].push(Task.new({
+      newtask = Task.new({
         :subject => params["task-name"],
         :role => params["role-name"],
         :long_descr => params["long-descr"],
-      }))
+      })
+      @@db[:tasks].delete_if { |t| t.subject == newtask.subject }
+      @@db[:tasks].push(newtask)
     end
 
     set_flash_success(sprintf(
