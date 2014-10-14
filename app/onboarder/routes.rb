@@ -154,6 +154,23 @@ class Onboarder
       params["newhire-name-last"])
 
     parent_issue_subject = sprintf("Onboarding %s", newhire_fullname)
+    uploads = []
+
+    # Upload all of the files... wasteful, but I don't there's an API for
+    # just "given a project, give me the project's attachments." Ugh.
+    all_uploads.each do |f|
+      ok, ret = @@redmine_cxn.post_attachment(
+        File.read(File.join(settings.uploaddir, f)))
+
+      return complain.call(sprintf("%s: %s", f, ret)) if not ok
+
+      uploads.push({
+        "token" => ret,
+        "filename" => File.basename(f),
+        "description" => "",
+        "content_type" => Rack::Mime::MIME_TYPES[File.extname(f)],
+      })
+    end
 
     # Post the parent issue
     parent_issue_id = @@redmine_cxn.post_issue({
@@ -162,6 +179,7 @@ class Onboarder
       "description" => "Parent ticket for onboarding #{newhire_fullname}",
       "assigned_to_id" => user_login_to_id(config(:hiring_manager)),
       "due_date" => sprintf("%04d-%02d-%02d", *date_fields),
+      "uploads" => uploads,
     })
 
     all_issue_ids = []

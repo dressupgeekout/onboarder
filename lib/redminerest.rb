@@ -54,7 +54,11 @@ class RedmineRest
     return JSON.load(res.body)["issue"]["id"]
   end
 
-  # Returns the token (a String) representing the newly uploaded file.
+  # Returns 'true' indicating success and token (a String) representing the
+  # newly uploaded file.
+  #
+  # Or else it returns 'false' indicating failure and a String reason
+  # indicating what went wrong.
   #
   # Internally, this doesn't use the shared #setup_post stuff because what
   # needs to happen here is actually very different compared to the other
@@ -67,7 +71,12 @@ class RedmineRest
     @req["Content-Length"] = file_s.length
     @req.body = file_s
     res = @http.request(@req)
-    return JSON.load(res.body)["upload"]["token"]
+
+    if res.code.to_i == 201
+      return [true, JSON.load(res.body)["upload"]["token"]]
+    else
+      return [false, JSON.load(res.body)["errors"].first]
+    end
   end
 
   private
