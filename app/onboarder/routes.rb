@@ -12,10 +12,13 @@ class Onboarder
     end
 
     @@db.transaction do
-      @@db[:roles].push(Role.new({
+      role = Role.new({
         :name => params["role-name"],
         :user => params["user"],
-      }))
+      })
+
+      @@db[:roles].delete_if { |r| r.name == role.name }
+      @@db[:roles].push(role)
     end
 
     set_flash_success(sprintf("Successfully assigned %s as the %s.",
