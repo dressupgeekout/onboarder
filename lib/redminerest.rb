@@ -54,6 +54,31 @@ class RedmineRest
     return JSON.load(res.body)["issue"]["id"]
   end
 
+  # Returns 'true' indicating success and token (a String) representing the
+  # newly uploaded file.
+  #
+  # Or else it returns 'false' indicating failure and a String reason
+  # indicating what went wrong.
+  #
+  # Internally, this doesn't use the shared #setup_post stuff because what
+  # needs to happen here is actually very different compared to the other
+  # REST endpoints.
+  def post_attachment(file_s)
+    setup
+    @req = Net::HTTP::Post.new("/uploads.json")
+    auth
+    @req["Content-Type"] = "application/octet-stream"
+    @req["Content-Length"] = file_s.length
+    @req.body = file_s
+    res = @http.request(@req)
+
+    if res.code.to_i == 201
+      return [true, JSON.load(res.body)["upload"]["token"]]
+    else
+      return [false, JSON.load(res.body)["errors"].first]
+    end
+  end
+
   private
 
   def setup

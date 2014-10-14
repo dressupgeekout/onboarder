@@ -1,0 +1,32 @@
+<a name="attachments"></a><h2>Attachments</h2>
+
+<ul class="info">
+  <li>These files will be attached to the top-level ticket that is created for
+  every new onboarding process.</li>
+</ul>
+
+<% if all_uploads.any? %>
+  <table class="highlightable-table">
+    <% all_uploads.each do |f| %>
+      <tr>
+        <td><%= f %></td>
+        <td>
+          <form method="POST" action="/attachments/<%= f %>"/>
+            <input type="hidden" name="_method" value="DELETE"/>
+            <input type="submit" value="Delete"/>
+          </form>
+        </td>
+      </tr>
+    <% end %>
+  </table>
+<% else %>
+  <p class="info">(No attachments)</p>
+<% end %>
+
+
+<a name="new-attachment"></a><h2>Upload a new file</h2>
+
+<form method="POST" action="#" enctype="multipart/form-data">
+  <input type="file" name="fyle"/>
+  <input type="submit" value="Upload"/>
+</form>
