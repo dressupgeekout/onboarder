@@ -13,12 +13,6 @@ class Onboarder
       return @@db.transaction { @@db[:roles] }.sort
     end
 
-    def all_uploads()
-      return Dir.entries(settings.uploaddir).
-        select { |f| File.file?(File.join(settings.uploaddir, f)) }.
-        sort
-    end
-
     # Returns the numeric ID of the Redmine project under which onboarding
     # tickets will be filed.
     def default_project_id()

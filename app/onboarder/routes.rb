@@ -8,59 +8,6 @@ class Onboarder
     erb(:index)
   end
 
-  get("/attachments/?") do
-    erb(:attachments)
-  end
-
-  post("/attachments") do
-    inf = request.env["rack.input"]
-
-    if !inf or !params["fyle"]
-      status(400)
-      set_flash_failure("Sorry, please select a file to upload.")
-      return erb(:attachments)
-    end
-
-    outfname = File.join(settings.uploaddir, params["fyle"][:filename])
-
-    if File.file?(outfname)
-      status(409)
-      set_flash_failure("Sorry, there already is a file with that name.")
-      return erb(:attachments)
-    end
-
-    outf = File.new(outfname, "w")
-    buf = ""
-    outf.write(buf) while (buf = inf.read(BUFSIZ))
-    outf.close
-
-    status(201)
-    set_flash_success(sprintf("Successfully upload file %s",
-      File.basename(outfname).inspect))
-    return erb(:attachments)
-  end
-
-  delete("/attachments/:filename") do
-    real_path = File.join(settings.uploaddir, params[:filename])
-
-    if not File.file?(real_path)
-      return redirect to("/attachments")
-    end
-
-    begin
-      FileUtils.rm(real_path)
-    rescue
-      set_flash_failure(sprintf("Couldn't remove attachment %s !",
-        params[:filename]))
-      return redirect to("/attachments")
-    end
-
-    status(200)
-    set_flash_success(sprintf("Successfully removed attachment %s.",
-      params[:filename]))
-    return redirect to("/attachments")
-  end
-
   post("/roles") do
     if params["role-name"] =~ EMPTY
       set_flash_failure("Sorry, please enter a nonblank name.")
@@ -154,19 +101,21 @@ class Onboarder
     parent_issue_subject = sprintf("Onboarding %s", newhire_fullname)
     uploads = []
 
-    # Upload all of the files... wasteful, but I don't there's an API for
-    # just "given a project, give me the project's attachments." Ugh.
-    all_uploads.each do |f|
-      ok, ret = @@redmine_cxn.post_attachment(
-        File.read(File.join(settings.uploaddir, f)))
+    # Upload all of the attached files to the ticket.
+    params["nfyles"].to_i.times do |i|
+      fyle = params["fyle#{i}"]
+      next if not fyle
+      contents = fyle[:tempfile].read
+      fname = fyle[:filename]
 
-      return complain.call(sprintf("%s: %s", f, ret)) if not ok
+      ok, ret = @@redmine_cxn.post_attachment(contents)
+      return complain.call(sprintf("%s: %s", fname, ret)) if !ok
 
       uploads.push({
         "token" => ret,
-        "filename" => File.basename(f),
+        "filename" => fname,
         "description" => "",
-        "content_type" => Rack::Mime::MIME_TYPES[File.extname(f)],
+        "content_type" => Rack::Mime::MIME_TYPES[File.extname(fname)],
       })
     end
 

@@ -7,7 +7,7 @@ function addAnotherAttachField() {
   var newListElement = document.createElement("li");
   var newField = document.createElement("input");
   newField.type = "file"
-  newField.id = "fyle" + nfyles;
+  newField.name = "fyle" + nfyles;
   newListElement.appendChild(newField);
   attachArea.appendChild(newListElement);
 
