@@ -207,8 +207,15 @@ class Onboarder
     end
 
     @@db.transaction do
+      if @@db[:taskmaps].any? { |tm| tm.name == params["taskmap-name"] }
+        set_flash_failure(sprintf("Sorry, there already is a department %s",
+          params["taskmap-name"].inspect))
+        @@db.abort
+      end
       tm = TaskMap.new({:name => params["taskmap-name"]})
       @@db[:taskmaps].push(tm)
+      set_flash_success(sprintf("Successfully added department %s",
+        tm.name.inspect))
     end
 
     redirect to("/")
