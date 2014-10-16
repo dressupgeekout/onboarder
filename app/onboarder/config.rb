@@ -7,7 +7,7 @@ $LOAD_PATH.unshift File.join(File.dirname(__FILE__), "..", "..", "lib")
 require 'redminerest'
 
 class Onboarder < Sinatra::Base
-  VERSION = %q(0.1.0a "I'm the Map")
+  VERSION = %q(0.2.0a "Sriracha Robot").freeze
 
   begin # SCOPE
     @@redmine_cxn = nil
