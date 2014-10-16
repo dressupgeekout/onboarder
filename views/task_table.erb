@@ -8,33 +8,37 @@
   do not.</p></li>
 </ul>
 
-<form method="POST" action="/tasktable">
-  <table id="task-table" class="highlightable-table">
-    <tr>
-      <th></th>
-      <% task_map.each do |mapping| %>
-        <th><%= mapping.subject %></th>
-      <% end %>
-    </tr>
-
-    <% all_taskmaps.each do |taskmap| %>
+<% if all_taskmaps.any? %>
+  <form method="POST" action="/tasktable">
+    <table id="task-table" class="highlightable-table">
       <tr>
-        <td><%= taskmap.name %></td>
+        <th></th>
         <% task_map.each do |mapping| %>
-          <td>
-            <input type="checkbox"
-              <% if taskmap.tasks.include?(mapping.subject) %>checked<% end %>
-              name="<%= taskmap.name %>-<%= mapping.subject %>"
-              value="1"
-            />
-          </td>
+          <th><%= mapping.subject %></th>
         <% end %>
       </tr>
-    <% end %>
-  </table>
 
-  <p><input type="submit" value="Save"/></p>
-</form>
+      <% all_taskmaps.each do |taskmap| %>
+        <tr>
+          <td><%= taskmap.name %></td>
+          <% task_map.each do |mapping| %>
+            <td>
+              <input type="checkbox"
+                <% if taskmap.tasks.include?(mapping.subject) %>checked<% end %>
+                name="<%= taskmap.name %>-<%= mapping.subject %>"
+                value="1"
+              />
+            </td>
+          <% end %>
+        </tr>
+      <% end %>
+    </table>
+
+    <p><input type="submit" value="Save"/></p>
+  </form>
+<% else %>
+  <p class="info">(No departments have been set up yet!)</p>
+<% end %>
 
 <hr/>
 
