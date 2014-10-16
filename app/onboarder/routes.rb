@@ -1,5 +1,6 @@
 class Onboarder
   EMPTY = /\A\s*\z/
+  include Messages
 
   get("/") do
     erb(:index)
@@ -57,7 +58,7 @@ class Onboarder
       params["newhire-startdate-month"], params["newhire-startdate-day"]]
 
     if name_fields.any? { |n| n =~ EMPTY }
-      return complain.call(Messages::NEED_NONEMPTY_NAME)
+      return complain.call(NEED_NONEMPTY_NAME)
     end
 
     if params["newhire-klass"] =~ EMPTY
