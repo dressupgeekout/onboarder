@@ -7,7 +7,7 @@ class Onboarder
 
   post("/roles") do
     if params["role-name"] =~ EMPTY
-      set_flash_failure("Sorry, please enter a nonblank name.")
+      set_flash_failure(NEED_NONEMPTY_NAME)
       return redirect to("/")
     end
 
@@ -57,23 +57,23 @@ class Onboarder
       params["newhire-startdate-month"], params["newhire-startdate-day"]]
 
     if name_fields.any? { |n| n =~ EMPTY }
-      return complain.call("Sorry, please enter a nonblank name.")
+      return complain.call(Messages::NEED_NONEMPTY_NAME)
     end
 
     if params["newhire-klass"] =~ EMPTY
-      return complain.call("Sorry, please specify an employee class.")
+      return complain.call(NEED_NONEMPTY_DEPOT)
     end
 
     if date_fields.any? { |d| d =~ EMPTY }
-      return complain.call("Sorry, please enter a valid date.")
+      return complain.call(NEED_VALID_DATE)
     end
 
     begin
       if Time.new(*(date_fields.map { |x| x.to_i })) < Time.now
-        return complain.call("Sorry, you must enter a date in the future.")
+        return complain.call(NEED_FUTURE_DATE)
       end
     rescue ArgumentError
-      return complain.call("Sorry, please enter a valid date.")
+      return complain.call(NEED_VALID_DATE)
     end
 
     if !config(:default_redmine_proj) or config(:default_redmine_proj).empty?
@@ -84,15 +84,15 @@ class Onboarder
     end
 
     if !config(:hiring_manager) or config(:hiring_manager).empty?
-      return complain.call("Sorry, please establish the hiring manager.")
+      return complain.call(NEED_HIRING_MGR)
     end
 
     if !task_map or task_map.empty?
-      return complain.call("Sorry, please define at least one task.")
+      return complain.call(NEED_TASK)
     end
 
     if !all_roles or all_roles.empty?
-      return complain.call("Sorry, please define at least one role.")
+      return complain.call(NEED_ROLE)
     end
 
     newhire_fullname = sprintf("%s %s", params["newhire-name-first"],
@@ -203,7 +203,7 @@ class Onboarder
 
   post("/taskmaps") do
     if params["taskmap-name"] =~ EMPTY
-      set_flash_failure("Sorry, please enter a nonblank name.")
+      set_flash_failure(NEED_NONEMTPY_NAME)
       status(403)
       return erb(:index)
     end
@@ -242,7 +242,7 @@ class Onboarder
     end
 
     status(200)
-    set_flash_success("Task table updated successfully.")
+    set_flash_success(UPDATE_TASKTABLE_SUCCESS)
     return erb(:task_table)
   end
 end
