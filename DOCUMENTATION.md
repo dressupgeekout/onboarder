@@ -61,6 +61,46 @@ together:
 
 -----
 
+## Notes for Ops People
+
+Read this section if you are in charge of deploying and maintaining this
+application.
+
+### Installing
+
+Onboarder is a HTTP application written in Ruby against the Sinatra
+framework. Virtus is used to make playing with PStore more convenient, and
+you also need JSON (which ships with MRI's standard library 1.9).
+
+Gem dependencies are managed with Bundler, but Onboarder ships with a
+convenient Makefile for running common tasks. These commands will fetch all
+of Onboarder's dependencies and store them in the ./vendor directory.
+
+    $ cd /path/to/onboarder/source
+    $ make dependencies
+
+Next, you need to bootstrap the database. You will be prompted for the URI
+of the Redmine installation, and the Redmine API key of an administrative
+user, so please have those ready.
+
+    $ make bootstrap
+
+You can use any Rack-compliant server to run Onboarder. The Makefile uses
+rackup(1) by default, which will default to the "best" HTTP server it can
+find.
+
+    $ make server
+
+
+### About PStore
+
+Onboarder does not use a SQL database nor a traditional object-relational
+mapper (ORM) to persist data. Ruby's standard library already ships with
+PStore, a Ruby object persistence mechanism based on Marshal, and thus
+Onboarder stores data inside of a PStore.
+
+-----
+
 ## Notes
 
 There's a notion of a "role" but this has nothing to do with Redmine's
