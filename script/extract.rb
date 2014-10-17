@@ -7,8 +7,8 @@ require 'optparse'
 $LOAD_PATH.unshift File.join(File.dirname(__FILE__), "..", "app")
 require 'onboarder/models'
 
-def complain(msg)
-  $stderr.puts(msg)
+def complain(msg, *args)
+  $stderr.puts(sprintf(msg, *args))
   exit 1
 end
 
@@ -24,8 +24,12 @@ end
 
 parser.parse!
 
-if options[:db].nil? or !File.file?(File.expand_path(options[:db]))
-  complain("No such file: %s", options[:db].inspect)
+if options[:db].nil?
+  complain("Error. You must specifiy a database. Aborting.")
+end
+
+if not File.file?(File.expand_path(options[:db]))
+  complain("No such file: %s. Aborting.", options[:db].inspect)
 end
 
 confobj = {
