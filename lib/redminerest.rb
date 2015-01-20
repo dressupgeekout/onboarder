@@ -19,7 +19,7 @@ class RedmineRest
   # => (Array of Hash)
   # XXX You can't do this unless you're a Redmine admin :(
   def all_users()
-    @endpoint = "/users.json"
+    @endpoint = "/users.json?limit=100"
     setup_get
     res = @http.request(@req)
     return JSON.load(res.body)["users"].sort_by { |user| user["lastname"] }
@@ -27,7 +27,7 @@ class RedmineRest
 
   # => (Array of Hash)
   def all_projects()
-    @endpoint = "/projects.json"
+    @endpoint = "/projects.json?limit=100"
     setup_get
     res = @http.request(@req)
     return JSON.load(res.body)["projects"].sort_by { |proj| proj["name"] }
@@ -35,7 +35,7 @@ class RedmineRest
 
   # => (Array of Hash)
   def all_issues()
-    @endpoint = "/issues.json"
+    @endpoint = "/issues.json?limit=100"
     setup_get
     res = @http.request(@req)
     return JSON.load(res.body)["issues"].sort_by { |issue| issue["id"] }
